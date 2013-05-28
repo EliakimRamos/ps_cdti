@@ -16,7 +16,7 @@
         <ul>
           <li><a href="#">Meus Consertos</a></li>
 		 <?php if(!empty($_SESSION['logadoCliente'])):?>
-			<li><a href="#">Meus Comentarios</a></li>
+			<li><a href="javascript:pagina('<?php echo $urlBase;?>comentar.php');">Comentar</a></li>
 		<?php endif; ?>
           <li><a href="javascript:sair('<?php echo $urlBase;?>sair.php');">Sair</a></li>
         </ul>

@@ -1,4 +1,5 @@
 var urlGlobal = document.URL.replace("view/","");
+   urlGlobal = urlGlobal.replace("#","");
 
 function validaSubmitCliente(){
           var nome= eval("document.frCliente.nome.value");
@@ -65,6 +66,25 @@ function validaSubmitCliente(){
 
           if(ok){
               cadastro(urlGlobal+"controller/cliente.php");
+          }
+
+}
+
+function validaSubmitComentario(){
+          var comentario= eval("document.frComentario.comentario.value");
+          var ok = true;
+          var mensagem = "";
+
+          if(trim(comentario) == ""){
+              mensagem += "O campo comentario é Obrigatorio <br/>";
+              ok = false;
+          }
+          
+          document.getElementById("alert").innerHTML = mensagem;
+
+
+          if(ok){
+              cadastroC(urlGlobal+"controller/comentario.php");
           }
 
 }
@@ -197,6 +217,16 @@ function trim(str) {
 	}
 }
 
+function limitaCaracter(v,obj)
+{
+	if(v.length > 300){
+			v = v.substring(0,(v.length - (v.length - 300)));
+			document.getElementById("limite").innerHTML = "Limite do texto e de "+(300-v.length)+" caracteres";
+	}else{
+		document.getElementById("limite").innerHTML = "Limite do texto e de "+(300-v.length)+" caracteres";
+	}
+	obj.value = v;
+}
 
 function Telefone(v,obj){
     v=v.replace(/\D/g,"")                 //Remove tudo o que não é dígito
@@ -394,6 +424,39 @@ function cadastro(url){
   document.frCliente.estado.value="";
   document.frCliente.numero.value="";
   document.frCliente.telefone.value="";
+ // Envia via método POST as informações
+ mreq.open("post",url,true);
+    mreq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8") 
+ mreq.send(parametros);
+}
+function cadastroC(url){
+ var mreq;
+ // Procura o componente nativo do Mozilla/Safari para rodar o AJAX 
+ if(window.XMLHttpRequest){
+  // Inicializa o Componente XMLHTTP do Mozilla
+  mreq = new XMLHttpRequest();
+ // Caso ele não encontre, procura por uma versão ActiveX do IE 
+ }else if(window.ActiveXObject){ 
+  // Inicializa o Componente ActiveX para o AJAX
+  mreq = new ActiveXObject("Microsoft.XMLHTTP");
+ }else{ 
+  // Caso não consiga inicializar nenhum dos componentes, exibe um erro
+  alert("Seu navegador não tem suporte a AJAX.");
+ }
+
+ // Carrega a função de execução do AJAX
+ mreq.onreadystatechange = function() {
+  if(mreq.readyState == 1){
+   // Quando estiver "Carregando a página", exibe a mensagem
+   document.getElementById('alert').innerHTML = 'Carregando';   
+  }else if(mreq.readyState == 4){ 
+   // Quando estiver completado o Carregamento
+   // Procura pela DIV com o id="minha_div" e insere as informações 
+   document.getElementById('alert').innerHTML = mreq.responseText;
+  }
+ };
+  var parametros = "comentario="+eval("document.frComentario.comentario.value")+"&op=cadastrar";
+   document.frComentario.comentario.value = "";
  // Envia via método POST as informações
  mreq.open("post",url,true);
     mreq.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8") 
